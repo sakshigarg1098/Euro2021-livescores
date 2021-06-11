@@ -28,33 +28,33 @@ class Football:
 
         if self.match_details[0].isdigit():
             if self.match_details_lst[0].isdigit():
-                self.team1 = '{} {}'.format(flags[self.match_details_lst[1]], self.match_details_lst[1])
-                self.team2 = '{} {}'.format(self.match_details_lst[3], flags[self.match_details_lst[3]])
-                self.current_score = '{}   {}   {}'.format(self.team1, self.match_details_lst[2], self.team2)
+                self.team1 = self.match_details_lst[1]
+                self.team2 = self.match_details_lst[3]
+                self.current_score = '{}   {}   {}'.format(flags[self.team1]+self.team1, self.match_details_lst[2], self.team2+flags[self.team2])
                 self.team1_score = int((self.match_details_lst[2])[0])
                 self.team2_score = int((self.match_details_lst[2])[4])
             else:
-                self.team1 = '{} {}'.format(flags[self.match_details_lst[0][5:]], self.match_details_lst[0][5:])
-                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
+                self.team1 = self.match_details_lst[0][5:]
+                self.team2 = self.match_details_lst[2]
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
         else:
             if self.match_details[:2] == 'FT' or self.match_details[:2] == 'HT':
-                self.team1 = '{} {}'.format(flags[self.match_details_lst[0][2:]], self.match_details_lst[0][2:])
-                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
-                self.current_score = '{}   {}   {}'.format(self.team1, self.match_details_lst[1], self.team2)
+                self.team1 = self.match_details_lst[0][2:]
+                self.team2 = self.match_details_lst[2]
+                self.current_score = '{}   {}   {}'.format(flags[self.team1]+self.team1, self.match_details_lst[1], self.team2+flags[self.team2])
                 self.team1_score = int((self.match_details_lst[1])[0])
                 self.team2_score = int((self.match_details_lst[1])[4])
             else:
-                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
+                self.team2 = self.match_details_lst[2]
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
                 if self.match_details[:5] == 'Canc.':
-                    self.team1 = '{} {}'.format(flags[self.match_details_lst[0][5:]], self.match_details_lst[0][5:])
+                    self.team1 = self.match_details_lst[0][5:]
                 else:
-                    self.team1 = '{} {}'.format(flags[self.match_details_lst[0][6:]], self.match_details_lst[0][6:])
+                    self.team1 = self.match_details_lst[0][6:]
 
     def winner(self):
         if self.team1_score > self.team2_score:
