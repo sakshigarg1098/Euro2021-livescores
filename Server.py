@@ -36,67 +36,56 @@ while True:
         if match2.team1_yellow() is True:
             if len(current_team1_scorers) > len(previous_team1_scorers):
                 previous_team1_scorers = current_team1_scorers
-                api.update_status('Yellow Card by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nYellow Card by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team1_scorers()[-1], match2.team1, match2.current_score))
             else:
                 pass
         elif match2.team1_red() is True:
             if len(current_team1_scorers) > len(previous_team1_scorers):
                 previous_team1_scorers = current_team1_scorers
-                api.update_status('Red Card by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nRed Card by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team1_scorers()[-1], match2.team1, match2.current_score))
             else:
                 pass
         else:
             if len(current_team1_assists) > len(previous_team1_assists):
                 previous_team1_assists = current_team1_assists
-                api.update_status('Goal by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-                api.update_status('Assist: {}'.format(match2.team1_assists()[-1]))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(match2.team1, match2.team2, match2.team1_scorers()[-1], match2.team1, match2.team1_assists()[-1], match2.current_score))
             else:
                 try:
-                    api.update_status('Goal by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-                    api.update_status(match2.current_score)
+                    api.update_status('#EURO2021 \n #{}vs{} \nGoal by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team1_scorers()[-1], match2.team1, match2.current_score))
                 except:
-                    api.update_status(match2.current_score)
+                    api.update_status('#EURO2021 \n #{}vs{} \n{}'.format(match2.team1, match2.team2, match2.current_score))
 
     elif len(current_team2_events) > len(previous_team2_events):
         previous_team2_events = current_team2_events
         if match2.team2_yellow() is True:
             if len(current_team2_scorers) > len(previous_team2_scorers):
                 previous_team2_scorers = current_team2_scorers
-                api.update_status('Yellow Card by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nYellow Card by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team2_scorers()[-1], match2.team2, match2.current_score))
             else:
                 pass
         elif match2.team2_red() is True:
             if len(current_team2_scorers) > len(previous_team2_scorers):
                 previous_team2_scorers = current_team2_scorers
-                api.update_status('Red Card by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nRed Card by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team2_scorers()[-1], match2.team2, match2.current_score))
             else:
                 pass
         else:
             if len(current_team2_assists) > len(previous_team2_assists):
                 previous_team2_assists = current_team2_assists
-                api.update_status('Goal by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-                api.update_status('Assist: {}'.format(match2.team2_assists()[-1]))
-                api.update_status(match2.current_score)
+                api.update_status('#EURO2021 \n #{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(match2.team1, match2.team2, match2.team2_scorers()[-1], match2.team2, match2.team2_assists()[-1], match2.current_score))
             else:
                 try:
-                    api.update_status('Goal by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-                    api.update_status(match2.current_score)
+                    api.update_status('#EURO2021 \n #{}vs{} \nGoal by : {} ({}) \n{}'.format(match2.team1, match2.team2, match2.team2_scorers()[-1], match2.team2, match2.current_score))
                 except:
-                    api.update_status(match2.current_score)
+                    api.update_status('#EURO2021 \n #{}vs{} \n{}'.format(match2.team1, match2.team2, match2.current_score))
 
     else:
         if len(previous_times_lst) < len(current_times_lst):
             previous_times_lst = current_times_lst
             if current_times_lst[-1] == 'HT':
-                api.update_status('Half Time: {}'.format(match2.current_score))
+                api.update_status('#EURO2021 \n #{}vs{} \nHalf Time: {} \n{}'.format(match2.team1, match2.team2, match2.current_score, match2.winner()))
             elif current_times_lst[-1] == 'FT':
-                api.update_status('Full Time: {}'.format(match2.current_score))
-                api.update_status(match2.winner())
+                api.update_status('#EURO2021 \n #{}vs{} \nFull Time: {} \n{}'.format(match2.team1, match2.team2, match2.current_score, match2.winner()))
         else:
             pass
     time.sleep(3)
