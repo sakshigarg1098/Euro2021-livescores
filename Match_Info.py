@@ -1,4 +1,3 @@
-import time
 from requests_html import HTMLSession
 import re
 
@@ -7,8 +6,8 @@ class Football:
 
     def __init__(self, match_link):
         session = HTMLSession()
-        res = session.get(match_link)
-        self.match_codes = res.html.find('#__livescore', first=True)
+        self.res = session.get(match_link)
+        self.match_codes = self.res.html.find('#__livescore', first=True)
         self.match_details = self.match_codes.text
         self.match_details_lst = re.split("'|\n", self.match_details)
         if self.match_details[0].isdigit():
@@ -43,14 +42,20 @@ class Football:
 
     def winner(self):
         if self.team1_score > self.team2_score:
-            return 'Winner is: {}'.format(self.team1)
+            return '{} Won!'.format(self.team1)
         elif self.team1_score < self.team2_score:
-            return 'Winner is: {}'.format(self.team2)
+            return '{} Won!'.format(self.team2)
         else:
-            return 'Draw'
+            return 'DRAW! {}'.format(self.final_score())
 
     def final_score(self):
         return self.current_score
+
+    def times_(self):
+        times_ = []
+        for time_ in self.match_codes.find('.MatchDetailScore_matchScoreRow__1Lkxo .MatchDetailScore_status__16-uQ'):
+            times_.append(time_.text)
+        return times_[1:]
 
     def team1_scorers(self):
         scorers_team1_lst = []
@@ -65,6 +70,14 @@ class Football:
             assists_team1_lst.append(assists_team1.text)
         return assists_team1_lst
 
+    def team1_yellow(self):
+        if self.team1_events()[-1][:18] == 'FootballYellowCard':
+            return True
+
+    def team1_red(self):
+        if self.team1_events()[-1][:15] == 'FootballRedCard':
+            return True
+
     def team2_scorers(self):
         scorers_team2_lst = []
         for scorer_team2 in self.match_codes.find('.Details_away__2_UTs .Details_player__2bYfI'):
@@ -77,6 +90,14 @@ class Football:
         for assists_team2 in self.match_codes.find('.Details_away__2_UTs .Details_assist__x9ykY'):
             assists_team2_lst.append(assists_team2.text)
         return assists_team2_lst
+
+    def team2_yellow(self):
+        if self.team2_events()[-1][:18] == 'FootballYellowCard':
+            return True
+
+    def team2_red(self):
+        if self.team2_events()[-1][:15] == 'FootballRedCard':
+            return True
 
     def score_lst(self):
         scores = []
@@ -119,9 +140,9 @@ class Football:
     def status(self):
         warning = 'This match has a limited coverage. Score updates may be delayed.'
         if self.match_details[:2] == 'FT':
-            return '{} , Score: {}'.format(self.winner(), self.current_score)
+            return '{} \nScore: {}'.format(self.winner(), self.current_score)
         elif self.match_details[:2] == 'HT':
-            return 'HT, Score: {}'.format(self.current_score)
+            return 'HT | Score: {}'.format(self.current_score)
         elif self.match_details[:4] == 'Post':
             return 'This match has been postponed.'
         elif self.match_details[:4] == 'Canc':
@@ -130,40 +151,9 @@ class Football:
             return 'Current Score is: {}, Minutes Passed:'.format(self.current_score, self.match_details_lst[0])
         else:
             if self.match_details_lst[3] == warning:
-                return 'Scheduled at: {}. {}'.format(self.match_details[:5], warning)
+                self.res.html.render(sleep=1)
+                return 'Scheduled at: {}. {}'.format(self.res.html.find(".MatchDetailScore_status__16-uQ")[0].text,
+                                                     warning)
             else:
-                return 'Scheduled at: {}'.format(self.match_details[:5])
-
-
-previous_team1_events = []
-previous_team2_events = []
-while True:
-    match2 = Football(
-        'https://www.livescore.com/en/football/argentina/primera-nacional-zone-b/tristan-suarez-vs-guillermo-brown/383924/')
-
-    current_team1_events = match2.team1_events()
-    current_team2_events = match2.team2_events()
-
-    if len(current_team1_events) > len(previous_team1_events):
-        previous_team1_events = current_team1_events
-        if current_team1_events[-1][:18] == 'FootballYellowCard':
-            print('Yellow Card by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-        elif current_team1_events[-1][:15] == 'FootballRedCard':
-            print('Red Card by : {}'.format(match2.team1_scorers()[-1], match2.team1))
-        else:
-            print(match2.final_score())
-            print('Goal by : {} ({})'.format(match2.team1_scorers()[-1], match2.team1))
-
-    elif len(current_team2_events) > len(previous_team2_events):
-        previous_team2_events = current_team2_events
-        if current_team2_events[-1][:18] == 'FootballYellowCard':
-            print('Yellow Card by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-        elif current_team2_events[-1][:15] == 'FootballRedCard':
-            print('Red Card by : {}'.format(match2.team2_scorers()[-1], match2.team2))
-        else:
-            print(match2.final_score())
-            print('Goal by : {} ({})'.format(match2.team2_scorers()[-1], match2.team2))
-
-    else:
-        pass
-    time.sleep(300)
+                self.res.html.render(sleep=1)
+                return 'Scheduled at: {}'.format(self.res.html.find(".MatchDetailScore_status__16-uQ")[0].text)
