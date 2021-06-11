@@ -10,35 +10,51 @@ class Football:
         self.match_codes = self.res.html.find('#__livescore', first=True)
         self.match_details = self.match_codes.text
         self.match_details_lst = re.split("'|\n", self.match_details)
+
+        flags = {'Wales': '\U0001F3F4\U000E0067\U000E0062\U000E0077\U000E006C\U000E0073\U000E007F',
+                 'Ukraine': '\U0001F1FA\U0001F1E6', 'Turkey': '\U0001F1F9\U0001F1F7',
+                 'Switzerland': '\U0001F1E8\U0001F1ED',
+                 'Sweden': '\U0001F1F8\U0001F1EA', 'Spain': '\U0001F1EA\U0001F1F8',
+                 'Slovakia': '\U0001F1F8\U0001F1F0',
+                 'Scotland': '\U0001F3F4\U000E0067\U000E0062\U000E0073\U000E0063\U000E0074\U000E007F',
+                 'Russia': '\U0001F1F7\U0001F1FA', 'Portugal': '\U0001F1F5\U0001F1F9', 'Poland': '\U0001F1F5\U0001F1F1',
+                 'North Macedonia': '\U0001F1F2\U0001F1F0', 'Netherlands': '\U0001F1F3\U0001F1F1',
+                 'Italy': '\U0001F1EE\U0001F1F9', 'Hungary': '\U0001F1ED\U0001F1FA', 'Germany': '\U0001F1E9\U0001F1EA',
+                 'France': '\U0001F1EB\U0001F1F7', 'Finland': '\U0001F1EB\U0001F1EE',
+                 'England': '\U0001F3F4\U000E0067\U000E0062\U000E0065\U000E006E\U000E0067\U000E007F',
+                 'Denmark': '\U0001F1E9\U0001F1F0', 'Czech Republic': '\U0001F1E8\U0001F1FF',
+                 'Croatia': '\U0001F1ED\U0001F1F7',
+                 'Belgium': '\U0001F1E7\U0001F1EA', 'Austria': '\U0001F1E6\U0001F1F9'}
+
         if self.match_details[0].isdigit():
             if self.match_details_lst[0].isdigit():
-                self.team1 = self.match_details_lst[1]
-                self.team2 = self.match_details_lst[3]
+                self.team1 = '{} {}'.format(flags[self.match_details_lst[1]], self.match_details_lst[1])
+                self.team2 = '{} {}'.format(self.match_details_lst[3], flags[self.match_details_lst[3]])
                 self.current_score = '{}   {}   {}'.format(self.team1, self.match_details_lst[2], self.team2)
                 self.team1_score = int((self.match_details_lst[2])[0])
                 self.team2_score = int((self.match_details_lst[2])[4])
             else:
-                self.team1 = self.match_details_lst[0][5:]
-                self.team2 = self.match_details_lst[2]
+                self.team1 = '{} {}'.format(flags[self.match_details_lst[0][5:]], self.match_details_lst[0][5:])
+                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
         else:
             if self.match_details[:2] == 'FT' or self.match_details[:2] == 'HT':
-                self.team1 = self.match_details_lst[0][2:]
-                self.team2 = self.match_details_lst[2]
+                self.team1 = '{} {}'.format(flags[self.match_details_lst[0][2:]], self.match_details_lst[0][2:])
+                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
                 self.current_score = '{}   {}   {}'.format(self.team1, self.match_details_lst[1], self.team2)
                 self.team1_score = int((self.match_details_lst[1])[0])
                 self.team2_score = int((self.match_details_lst[1])[4])
             else:
-                self.team2 = self.match_details_lst[2]
+                self.team2 = '{} {}'.format(self.match_details_lst[2], flags[self.match_details_lst[2]])
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
                 if self.match_details[:5] == 'Canc.':
-                    self.team1 = self.match_details_lst[0][5:]
+                    self.team1 = '{} {}'.format(flags[self.match_details_lst[0][5:]], self.match_details_lst[0][5:])
                 else:
-                    self.team1 = self.match_details_lst[0][6:]
+                    self.team1 = '{} {}'.format(flags[self.match_details_lst[0][6:]], self.match_details_lst[0][6:])
 
     def winner(self):
         if self.team1_score > self.team2_score:
@@ -46,10 +62,7 @@ class Football:
         elif self.team1_score < self.team2_score:
             return '{} Won!'.format(self.team2)
         else:
-            return 'DRAW! {}'.format(self.final_score())
-
-    def final_score(self):
-        return self.current_score
+            return 'DRAW! {}'.format(self.current_score)
 
     def times_(self):
         times_ = []
