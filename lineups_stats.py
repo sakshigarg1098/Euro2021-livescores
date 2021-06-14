@@ -1,7 +1,9 @@
 from requests_html import HTMLSession
 from datetime import datetime
 import re
-
+'''from Match_Info import Football
+m = Football('https://www.livescore.com/en/football/africa-cup-of-nations/qualification-group-l/sierra-leone-vs-benin/152305/')
+print(m.scheduled_time[0].isdigit())'''
 
 '''def stats(goal_homepage):
     session = HTMLSession()
