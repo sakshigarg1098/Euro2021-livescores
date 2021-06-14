@@ -67,7 +67,7 @@ class Football:
         elif self.team1_score < self.team2_score:
             return '{} Won!'.format(self.team2)
         else:
-            return 'DRAW! {}'.format(self.current_score)
+            return 'DRAW!'
 
     def times_(self):
         times_ = []
