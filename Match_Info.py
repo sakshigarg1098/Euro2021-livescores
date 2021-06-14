@@ -34,7 +34,7 @@ class Football:
                     flags[self.team1]+self.team1, self.match_details_lst[2], self.team2+flags[self.team2])
                 self.team1_score = int((self.match_details_lst[2])[0])
                 self.team2_score = int((self.match_details_lst[2])[4])
-                self.scheduled_time = None
+                self.scheduled_time = 'None'
             else:
                 self.team1 = self.match_details_lst[0][5:]
                 self.team2 = self.match_details_lst[2]
@@ -51,13 +51,13 @@ class Football:
                     flags[self.team1]+self.team1, self.match_details_lst[1], self.team2+flags[self.team2])
                 self.team1_score = int((self.match_details_lst[1])[0])
                 self.team2_score = int((self.match_details_lst[1])[4])
-                self.scheduled_time = None
+                self.scheduled_time = 'None'
             else:
                 self.team2 = self.match_details_lst[2]
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
-                self.scheduled_time = None
+                self.scheduled_time = 'None'
                 if self.match_details[:5] == 'Canc.':
                     self.team1 = self.match_details_lst[0][5:]
                 else:
