@@ -9,6 +9,7 @@ API_Key = 'Rl2iEuGVcttMr7XJpPZTfgUrb'
 API_Secret_Key = 'qW5qKmxnBAWfZhEnudivqLHkN0VVdAg62HB4VfNAr1QlDbZUA9'
 Access_Token = '1402255274984026114-VDnOyMDEdwRkWKgifQaPOlUx5lrkVQ'
 Access_Token_Secret = 'ZDO4XrLGLa72KvAgiG5wm8q8tukYQa56b7uYePTjapxiU'
+
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
 auth.set_access_token(Access_Token, Access_Token_Secret)
 api = tweepy.API(auth)
@@ -222,8 +223,7 @@ while True:
                                             if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
                                                     match2.team2).lower() in re.split("-|/", stat_link):
                                                 api.update_status(stats(stat_link))
+                                        break
                                 else:
                                     pass
-                            if current_times_lst[-1] == 'FT':
-                                break
                             time.sleep(60)
