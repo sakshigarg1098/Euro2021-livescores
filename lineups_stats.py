@@ -1,34 +1,10 @@
 from requests_html import HTMLSession
-from datetime import datetime
-import re
-'''from Match_Info import Football
-m = Football('https://www.livescore.com/en/football/africa-cup-of-nations/qualification-group-l/sierra-leone-vs-benin/152305/')
-print(m.scheduled_time[0].isdigit())'''
+from Match_Info import Football
 
-'''def stats(goal_homepage):
-    session = HTMLSession()
-    matches = goal_homepage
-    res = session.get(matches)
-    match_data = res.html.find('.match-row-list', first=True)
-    details = match_data.find('[href^="/en-in/match/"]')
-    stats_link_lst = []
-    for detail in details:
-        link = str(detail).split("'")[-2].split('/')
-        link.insert(4, 'commentary-result')
-        link[0] = 'https://www.goal.com'
-        link = '/'.join(link)
-        stats_link_lst.append(link)
-    for link in stats_link_lst:
-        if str(m.team1).lower() in re.split("-|/", link) and str(m.team2).lower() in re.split("-|/", link):
-            stats = session.get(link).html.find('.widget-match-stats .content')[0].text
-            possession = '{} - {} | {} - {}'.format(m.team1, stats.split()[1], m.team2, stats.split()[2])
-            shots_on_target = '{} - {} | {} - {}'.format(m.team1, stats.split()[11], m.team2, stats.split()[12])
-            total_passes = '{} - {} | {} - {}'.format(m.team1, stats.split()[15], m.team2, stats.split()[16])
-            print('Possession: {} \nShots on Target: {} \nTotal Passes: {}'.format(possession, shots_on_target, total_passes))'''
+match2 = Football('https://www.livescore.com/en/football/africa-cup-of-nations/qualification-group-l/sierra-leone-vs-benin/152305/')
 
 
-
-'''def stats_post_time(scheduled_time_str):
+def stats_post_time(scheduled_time_str):
     time_list = scheduled_time_str.split(':')
     if int(time_list[1]) < 30:
         time_list[1] = str(int(time_list[1]) + 30)
@@ -58,4 +34,29 @@ print(m.scheduled_time[0].isdigit())'''
                 time_list[1] = '0' + str(int(time_list[1]) - 30)
             else:
                 time_list[1] = str(int(time_list[1]) - 30)
-    return ':'.join(time_list)'''
+    return ':'.join(time_list)
+
+
+def stats_links():
+    session3 = HTMLSession()
+    matches = 'https://www.goal.com/en-in/live-scores'
+    res = session3.get(matches)
+    match_data = res.html.find('.match-row-list', first=True)
+    details = match_data.find('[href^="/en-in/match/"]')
+    stats_link_lst = []
+    for detail in details:
+        link_data = str(detail).split("'")[-2].split('/')
+        link_data.insert(4, 'commentary-result')
+        link_data[0] = 'https://www.goal.com'
+        link_data = '/'.join(link_data)
+        stats_link_lst.append(link_data)
+    return stats_link_lst
+
+
+def stats(stats_link):
+    session4 = HTMLSession()
+    stats_data = session4.get(stats_link).html.find('.widget-match-stats .content')[0].text
+    possession = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[1], match2.team2, stats_data.split()[2])
+    shots_on_target = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[11], match2.team2, stats_data.split()[12])
+    total_passes = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[15], match2.team2, stats_data.split()[16])
+    return 'Possession: {} \nShots on Target: {} \nTotal Passes: {}'.format(possession, shots_on_target, total_passes)

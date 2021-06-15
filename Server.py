@@ -74,6 +74,31 @@ def lineups_post_time(scheduled_time_str):
     return ':'.join(time_list)
 
 
+def stats_links():
+    session3 = HTMLSession()
+    matches = 'https://www.goal.com/en-in/live-scores'
+    res = session3.get(matches)
+    match_data = res.html.find('.match-row-list', first=True)
+    details = match_data.find('[href^="/en-in/match/"]')
+    stats_link_lst = []
+    for detail in details:
+        link_data = str(detail).split("'")[-2].split('/')
+        link_data.insert(4, 'commentary-result')
+        link_data[0] = 'https://www.goal.com'
+        link_data = '/'.join(link_data)
+        stats_link_lst.append(link_data)
+    return stats_link_lst
+
+
+def stats(stats_link):
+    session4 = HTMLSession()
+    stats_data = session4.get(stats_link).html.find('.widget-match-stats .content')[0].text
+    possession = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[1], match2.team2, stats_data.split()[2])
+    shots_on_target = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[11], match2.team2, stats_data.split()[12])
+    total_passes = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[15], match2.team2, stats_data.split()[16])
+    return 'Possession: {} \nShots on Target: {} \nTotal Passes: {}'.format(possession, shots_on_target, total_passes)
+
+
 while True:
     for link in euro_match_links:  # all links of euro matches
         match2 = Football(link)
@@ -81,7 +106,7 @@ while True:
             if datetime.now().strftime('%H:%M') == lineups_post_time(
                     match2.scheduled_time):  # if current time is 15 min before scheduled time
                 for lineup_link in lineups_links():  # list of line-ups links of matches in a day
-                    if str(match2.team1).lower() in re.split("-|/", lineup_link):
+                    if str(match2.team1).lower() in re.split("-|/", lineup_link) or str(match2.team2).lower() in re.split("-|/", lineup_link):
                         api.update_status(lineups(link))  # if team names are in line-ups link, print line-ups
                         previous_team1_events = []
                         previous_team2_events = []
@@ -185,12 +210,20 @@ while True:
                                         api.update_status('#EURO2021 \n#{}vs{} \nHalf Time: {} \n{}'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.current_score, match2.winner()))
+                                        for stat_link in stats_links():
+                                            if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
+                                                    match2.team2).lower() in re.split("-|/", stat_link):
+                                                api.update_status(stats(stat_link))
                                     elif current_times_lst[-1] == 'FT':
                                         api.update_status('#EURO2021 \n#{}vs{} \nFull Time: {} \n{}'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.current_score, match2.winner()))
+                                        for stat_link in stats_links():
+                                            if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
+                                                    match2.team2).lower() in re.split("-|/", stat_link):
+                                                api.update_status(stats(stat_link))
                                 else:
                                     pass
                             if current_times_lst[-1] == 'FT':
                                 break
-                            time.sleep(5)
+                            time.sleep(60)
