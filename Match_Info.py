@@ -41,7 +41,7 @@ class Football:
                 self.current_score = None
                 self.team1_score = None
                 self.team2_score = None
-                self.res.html.render(sleep=1)
+                self.res.html.render(timeout=30)
                 self.scheduled_time = self.res.html.find(".MatchDetailScore_status__16-uQ")[0].text
         else:
             if self.match_details[:2] == 'FT' or self.match_details[:2] == 'HT':
