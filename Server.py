@@ -52,7 +52,8 @@ def lineups1(lineups_link):
         teams.append(team.text)
     for player in lineups_data:
         players.append(player.text)
-    lineup = 'LINEUPS - {}:\n{}'.format(teams[0], '\n'.join(players[:11]))
+    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n\n{}'.format(
+        teams[0].replace(' ', ''), teams[1].replace(' ', ''), teams[0], '\n'.join(players[:11]))
     return lineup
 
 
@@ -67,7 +68,8 @@ def lineups2(lineups_link):
         teams.append(team.text)
     for player in lineups_data:
         players.append(player.text)
-    lineup = 'LINEUPS - {}:\n{}'.format(teams[1], '\n'.join(players[11:]))
+    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n\n{}'.format(
+        teams[0].replace(' ', ''), teams[1].replace(' ', ''), teams[1], '\n'.join(players[11:]))
     return lineup
 
 
@@ -111,22 +113,25 @@ def stats(stats_link):
     session4 = HTMLSession()
     stats_data = session4.get(stats_link).html.find('.widget-match-stats .content')[0].text
     possession = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[1], match2.team2, stats_data.split()[2])
-    shots_on_target = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[11], match2.team2, stats_data.split()[12])
-    total_passes = '{} - {} | {} - {}'.format(match2.team1, stats_data.split()[15], match2.team2, stats_data.split()[16])
-    return 'Possession: {} \nShots on Target: {} \nTotal Passes: {}'.format(possession, shots_on_target, total_passes)
+    shots_on_target = '{} - {} | {} - {}'.format(
+        match2.team1, stats_data.split()[11], match2.team2, stats_data.split()[12])
+    total_passes = '{} - {} | {} - {}'.format(
+        match2.team1, stats_data.split()[15], match2.team2, stats_data.split()[16])
+    return '#EURO2021 \n#{}vs{} \nPossession: \n{} \nShots on Target: \n{} \nTotal Passes: \n{}'.format(
+        match2.team1.replace(' ', ''), match2.team2.replace(' ', ''), possession, shots_on_target, total_passes)
 
 
 while True:
     for link in euro_match_links:
-        match2 = Football(link)
-        if match2.scheduled_time[0].isdigit():
-            if datetime.now().strftime('%H:%M') == lineups_post_time(
-                    match2.scheduled_time):
+        match = Football(link)
+        if match.scheduled_time[0].isdigit():
+            if datetime.now().strftime('%H:%M') == lineups_post_time(match.scheduled_time):
                 for lineup_link in lineups_links():
-                    if str(match2.team1).lower() in re.split("-|/", lineup_link) or str(
-                            match2.team2).lower() in re.split("-|/", lineup_link):
-                        api.update_status(lineups1(lineup_link))
-                        api.update_status(lineups2(lineup_link))
+                    if str(match.team1).lower() in re.split("-|/", lineup_link) or str(
+                            match.team2).lower() in re.split("-|/", lineup_link):
+
+                        print(lineups1(lineup_link))
+                        print(lineups2(lineup_link))
 
                         previous_team1_events = []
                         previous_team2_events = []
@@ -137,6 +142,8 @@ while True:
                         previous_times_lst = []
 
                         while True:
+
+                            match2 = Football(link)
                             current_team1_events = match2.team1_events()
                             current_team2_events = match2.team2_events()
                             current_team1_assists = match2.team1_assists()
@@ -150,7 +157,7 @@ while True:
                                 if match2.team1_yellow() is True:
                                     if len(current_team1_scorers) > len(previous_team1_scorers):
                                         previous_team1_scorers = current_team1_scorers
-                                        api.update_status('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
+                                        print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.team1_scorers()[-1], match2.team1))
                                     else:
@@ -158,7 +165,7 @@ while True:
                                 elif match2.team1_red() is True:
                                     if len(current_team1_scorers) > len(previous_team1_scorers):
                                         previous_team1_scorers = current_team1_scorers
-                                        api.update_status('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
+                                        print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.team1_scorers()[-1], match2.team1))
                                     else:
@@ -166,19 +173,19 @@ while True:
                                 else:
                                     if len(current_team1_assists) > len(previous_team1_assists):
                                         previous_team1_assists = current_team1_assists
-                                        api.update_status(
+                                        print(
                                             '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.team1_scorers()[-1], match2.team1,
                                                 match2.team1_assists()[-1], match2.current_score))
                                     else:
                                         try:
-                                            api.update_status('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
+                                            print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.team1_scorers()[-1], match2.team1,
                                                 match2.current_score))
                                         except:
-                                            api.update_status('#EURO2021 \n#{}vs{} \n{}'.format(
+                                            print('#EURO2021 \n#{}vs{} \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.current_score))
 
@@ -187,7 +194,7 @@ while True:
                                 if match2.team2_yellow() is True:
                                     if len(current_team2_scorers) > len(previous_team2_scorers):
                                         previous_team2_scorers = current_team2_scorers
-                                        api.update_status('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
+                                        print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.team2_scorers()[-1], match2.team2))
                                     else:
@@ -195,7 +202,7 @@ while True:
                                 elif match2.team2_red() is True:
                                     if len(current_team2_scorers) > len(previous_team2_scorers):
                                         previous_team2_scorers = current_team2_scorers
-                                        api.update_status('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
+                                        print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.team2_scorers()[-1], match2.team2))
                                     else:
@@ -203,19 +210,19 @@ while True:
                                 else:
                                     if len(current_team2_assists) > len(previous_team2_assists):
                                         previous_team2_assists = current_team2_assists
-                                        api.update_status(
+                                        print(
                                             '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.team2_scorers()[-1], match2.team2,
                                                 match2.team2_assists()[-1], match2.current_score))
                                     else:
                                         try:
-                                            api.update_status('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
+                                            print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.team2_scorers()[-1], match2.team2,
                                                 match2.current_score))
                                         except:
-                                            api.update_status('#EURO2021 \n#{}vs{} \n{}'.format(
+                                            print('#EURO2021 \n#{}vs{} \n{}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.current_score))
 
@@ -223,22 +230,24 @@ while True:
                                 if len(previous_times_lst) < len(current_times_lst):
                                     previous_times_lst = current_times_lst
                                     if current_times_lst[-1] == 'HT':
-                                        api.update_status('#EURO2021 \n#{}vs{} \nHalf Time: {} \n{}'.format(
+                                        print('#EURO2021 \n#{}vs{} \nHalf Time: {} \n{}'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.current_score, match2.winner()))
                                         for stat_link in stats_links():
                                             if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
                                                     match2.team2).lower() in re.split("-|/", stat_link):
-                                                api.update_status(stats(stat_link))
+                                                print(stats(stat_link))
                                     elif current_times_lst[-1] == 'FT':
-                                        api.update_status('#EURO2021 \n#{}vs{} \nFull Time: {} \n{}'.format(
+                                        print('#EURO2021 \n#{}vs{} \nFull Time: {} \n{}'.format(
                                             match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                             match2.current_score, match2.winner()))
                                         for stat_link in stats_links():
                                             if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
                                                     match2.team2).lower() in re.split("-|/", stat_link):
-                                                api.update_status(stats(stat_link))
-                                        break
+                                                print(stats(stat_link))
                                 else:
                                     pass
+
                             time.sleep(60)
+
+    time.sleep(900)
