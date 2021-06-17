@@ -5,10 +5,10 @@ from Match_Info import Football
 import re
 from requests_html import HTMLSession
 
-API_Key = 'Rl2iEuGVcttMr7XJpPZTfgUrb'
-API_Secret_Key = 'qW5qKmxnBAWfZhEnudivqLHkN0VVdAg62HB4VfNAr1QlDbZUA9'
-Access_Token = '1402255274984026114-VDnOyMDEdwRkWKgifQaPOlUx5lrkVQ'
-Access_Token_Secret = 'ZDO4XrLGLa72KvAgiG5wm8q8tukYQa56b7uYePTjapxiU'
+API_Key = ''
+API_Secret_Key = ''
+Access_Token = ''
+Access_Token_Secret = ''
 
 auth = tweepy.OAuthHandler(API_Key, API_Secret_Key)
 auth.set_access_token(Access_Token, Access_Token_Secret)
