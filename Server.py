@@ -52,7 +52,7 @@ def lineups1(lineups_link):
         teams.append(team.text)
     for player in lineups_data:
         players.append(player.text)
-    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n\n{}'.format(
+    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n{}'.format(
         teams[0].replace(' ', ''), teams[1].replace(' ', ''), teams[0], '\n'.join(players[:11]))
     return lineup
 
@@ -68,7 +68,7 @@ def lineups2(lineups_link):
         teams.append(team.text)
     for player in lineups_data:
         players.append(player.text)
-    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n\n{}'.format(
+    lineup = '#EURO2021 \n#{}vs{} \nLINE-UPS - {}:\n{}'.format(
         teams[0].replace(' ', ''), teams[1].replace(' ', ''), teams[1], '\n'.join(players[11:]))
     return lineup
 
@@ -122,132 +122,169 @@ def stats(stats_link):
 
 
 while True:
+    flags = {'Wales': '\U0001F3F4\U000E0067\U000E0062\U000E0077\U000E006C\U000E0073\U000E007F',
+             'Ukraine': '\U0001F1FA\U0001F1E6', 'Turkey': '\U0001F1F9\U0001F1F7',
+             'Switzerland': '\U0001F1E8\U0001F1ED',
+             'Sweden': '\U0001F1F8\U0001F1EA', 'Spain': '\U0001F1EA\U0001F1F8',
+             'Slovakia': '\U0001F1F8\U0001F1F0',
+             'Scotland': '\U0001F3F4\U000E0067\U000E0062\U000E0073\U000E0063\U000E0074\U000E007F',
+             'Russia': '\U0001F1F7\U0001F1FA', 'Portugal': '\U0001F1F5\U0001F1F9', 'Poland': '\U0001F1F5\U0001F1F1',
+             'North Macedonia': '\U0001F1F2\U0001F1F0', 'Netherlands': '\U0001F1F3\U0001F1F1',
+             'Italy': '\U0001F1EE\U0001F1F9', 'Hungary': '\U0001F1ED\U0001F1FA', 'Germany': '\U0001F1E9\U0001F1EA',
+             'France': '\U0001F1EB\U0001F1F7', 'Finland': '\U0001F1EB\U0001F1EE',
+             'England': '\U0001F3F4\U000E0067\U000E0062\U000E0065\U000E006E\U000E0067\U000E007F',
+             'Denmark': '\U0001F1E9\U0001F1F0', 'Czech Republic': '\U0001F1E8\U0001F1FF',
+             'Croatia': '\U0001F1ED\U0001F1F7',
+             'Belgium': '\U0001F1E7\U0001F1EA', 'Austria': '\U0001F1E6\U0001F1F9'}
+
     for link in euro_match_links:
         match = Football(link)
+
         if match.scheduled_time[0].isdigit():
-            if datetime.now().strftime('%H:%M') == lineups_post_time(match.scheduled_time):
-                for lineup_link in lineups_links():
-                    if str(match.team1).lower() in re.split("-|/", lineup_link) or str(
-                            match.team2).lower() in re.split("-|/", lineup_link):
 
-                        print(lineups1(lineup_link))
-                        print(lineups2(lineup_link))
+            if datetime.now().strftime('%H') == match.scheduled_time.split(":")[0]:
 
-                        previous_team1_events = []
-                        previous_team2_events = []
-                        previous_team1_assists = []
-                        previous_team2_assists = []
-                        previous_team1_scorers = []
-                        previous_team2_scorers = []
-                        previous_times_lst = []
+                if int(match.scheduled_time.split(":")[1])-15 < int(datetime.now().strftime("%M")) < int(
+                        match.scheduled_time.split(":")[1]):
 
-                        while True:
+                    for lineup_link in lineups_links():
+
+                        if str(match.team1).lower() in re.split("-|/", lineup_link) or str(
+                                match.team2).lower() in re.split("-|/", lineup_link):
 
                             match2 = Football(link)
-                            current_team1_events = match2.team1_events()
-                            current_team2_events = match2.team2_events()
-                            current_team1_assists = match2.team1_assists()
-                            current_team2_assists = match2.team2_assists()
-                            current_team1_scorers = match2.team1_scorers()
-                            current_team2_scorers = match2.team2_scorers()
-                            current_times_lst = match2.times_()
 
-                            if len(current_team1_events) > len(previous_team1_events):
-                                previous_team1_events = current_team1_events
-                                if match2.team1_yellow() is True:
-                                    if len(current_team1_scorers) > len(previous_team1_scorers):
-                                        previous_team1_scorers = current_team1_scorers
-                                        print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.team1_scorers()[-1], match2.team1))
+                            print('{} {} vs {} {} about to begin!'.format(
+                                flags[match2.team1], match2.team1.upper(), match2.team2.upper(), flags[match2.team2]))
+                            print(lineups1(lineup_link))
+                            print(lineups2(lineup_link))
+
+                            previous_team1_events = []
+                            previous_team2_events = []
+                            previous_team1_assists = []
+                            previous_team2_assists = []
+                            previous_team1_scorers = []
+                            previous_team2_scorers = []
+                            previous_times_lst = []
+
+                            while True:
+
+                                match2 = Football(link)
+                                current_team1_events = match2.team1_events()
+                                current_team2_events = match2.team2_events()
+                                current_team1_assists = match2.team1_assists()
+                                current_team2_assists = match2.team2_assists()
+                                current_team1_scorers = match2.team1_scorers()
+                                current_team2_scorers = match2.team2_scorers()
+                                current_times_lst = match2.times_()
+
+                                if len(current_team1_events) > len(previous_team1_events):
+                                    previous_team1_events = current_team1_events
+                                    if match2.team1_yellow() is True:
+                                        if len(current_team1_scorers) > len(previous_team1_scorers):
+                                            previous_team1_scorers = current_team1_scorers
+                                            print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.team1_scorers()[-1], match2.team1))
+                                        else:
+                                            pass
+                                    elif match2.team1_red() is True:
+                                        if len(current_team1_scorers) > len(previous_team1_scorers):
+                                            previous_team1_scorers = current_team1_scorers
+                                            print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.team1_scorers()[-1], match2.team1))
+                                        else:
+                                            pass
+
+                                    elif match2.team1_red() is True:
+                                        if len(current_team1_scorers) > len(previous_team1_scorers):
+                                            previous_team1_scorers = current_team1_scorers
+                                            print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.team1_scorers()[-1], match2.team1))
+                                        else:
+                                            pass
+
                                     else:
-                                        pass
-                                elif match2.team1_red() is True:
-                                    if len(current_team1_scorers) > len(previous_team1_scorers):
-                                        previous_team1_scorers = current_team1_scorers
-                                        print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.team1_scorers()[-1], match2.team1))
+                                        if len(current_team1_assists) > len(previous_team1_assists):
+                                            previous_team1_assists = current_team1_assists
+                                            print(
+                                                '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.team1_scorers()[-1], match2.team1,
+                                                    match2.team1_assists()[-1], match2.current_score))
+                                        else:
+                                            try:
+                                                print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.team1_scorers()[-1], match2.team1,
+                                                    match2.current_score))
+                                            except:
+                                                print('#EURO2021 \n#{}vs{} \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.current_score))
+
+                                elif len(current_team2_events) > len(previous_team2_events):
+                                    previous_team2_events = current_team2_events
+                                    if match2.team2_yellow() is True:
+                                        if len(current_team2_scorers) > len(previous_team2_scorers):
+                                            previous_team2_scorers = current_team2_scorers
+                                            print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.team2_scorers()[-1], match2.team2))
+                                        else:
+                                            pass
+                                    elif match2.team2_red() is True:
+                                        if len(current_team2_scorers) > len(previous_team2_scorers):
+                                            previous_team2_scorers = current_team2_scorers
+                                            print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.team2_scorers()[-1], match2.team2))
+                                        else:
+                                            pass
                                     else:
-                                        pass
+                                        if len(current_team2_assists) > len(previous_team2_assists):
+                                            previous_team2_assists = current_team2_assists
+                                            print(
+                                                '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.team2_scorers()[-1], match2.team2,
+                                                    match2.team2_assists()[-1], match2.current_score))
+                                        else:
+                                            try:
+                                                print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.team2_scorers()[-1], match2.team2,
+                                                    match2.current_score))
+                                            except:
+                                                print('#EURO2021 \n#{}vs{} \n{}'.format(
+                                                    match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                    match2.current_score))
+
                                 else:
-                                    if len(current_team1_assists) > len(previous_team1_assists):
-                                        previous_team1_assists = current_team1_assists
-                                        print(
-                                            '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
-                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                                match2.team1_scorers()[-1], match2.team1,
-                                                match2.team1_assists()[-1], match2.current_score))
-                                    else:
-                                        try:
-                                            print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
-                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                                match2.team1_scorers()[-1], match2.team1,
-                                                match2.current_score))
-                                        except:
-                                            print('#EURO2021 \n#{}vs{} \n{}'.format(
+                                    if len(previous_times_lst) < len(current_times_lst):
+                                        previous_times_lst = current_times_lst
+                                        if current_times_lst[-1] == 'HT':
+                                            for stat_link in stats_links():
+                                                if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
+                                                        match2.team2).lower() in re.split("-|/", stat_link):
+                                                    print(stats(stat_link))
+                                            print('#EURO2021 \n#{}vs{} \nHalf Time: {}'.format(
                                                 match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
                                                 match2.current_score))
-
-                            elif len(current_team2_events) > len(previous_team2_events):
-                                previous_team2_events = current_team2_events
-                                if match2.team2_yellow() is True:
-                                    if len(current_team2_scorers) > len(previous_team2_scorers):
-                                        previous_team2_scorers = current_team2_scorers
-                                        print('#EURO2021 \n#{}vs{} \nYellow Card : {} ({})'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.team2_scorers()[-1], match2.team2))
+                                        elif current_times_lst[-1] == 'FT':
+                                            for stat_link in stats_links():
+                                                if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
+                                                        match2.team2).lower() in re.split("-|/", stat_link):
+                                                    print(stats(stat_link))
+                                            print('#EURO2021 \n#{}vs{} \nFull Time: {} \n{}'.format(
+                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
+                                                match2.current_score, match2.winner()))
+                                            break
                                     else:
                                         pass
-                                elif match2.team2_red() is True:
-                                    if len(current_team2_scorers) > len(previous_team2_scorers):
-                                        previous_team2_scorers = current_team2_scorers
-                                        print('#EURO2021 \n#{}vs{} \nRed Card : {} ({})'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.team2_scorers()[-1], match2.team2))
-                                    else:
-                                        pass
-                                else:
-                                    if len(current_team2_assists) > len(previous_team2_assists):
-                                        previous_team2_assists = current_team2_assists
-                                        print(
-                                            '#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \nAssist: {} \n{}'.format(
-                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                                match2.team2_scorers()[-1], match2.team2,
-                                                match2.team2_assists()[-1], match2.current_score))
-                                    else:
-                                        try:
-                                            print('#EURO2021 \n#{}vs{} \nGoal by : {} ({}) \n{}'.format(
-                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                                match2.team2_scorers()[-1], match2.team2,
-                                                match2.current_score))
-                                        except:
-                                            print('#EURO2021 \n#{}vs{} \n{}'.format(
-                                                match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                                match2.current_score))
 
-                            else:
-                                if len(previous_times_lst) < len(current_times_lst):
-                                    previous_times_lst = current_times_lst
-                                    if current_times_lst[-1] == 'HT':
-                                        print('#EURO2021 \n#{}vs{} \nHalf Time: {} \n{}'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.current_score, match2.winner()))
-                                        for stat_link in stats_links():
-                                            if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
-                                                    match2.team2).lower() in re.split("-|/", stat_link):
-                                                print(stats(stat_link))
-                                    elif current_times_lst[-1] == 'FT':
-                                        print('#EURO2021 \n#{}vs{} \nFull Time: {} \n{}'.format(
-                                            match2.team1.replace(' ', ''), match2.team2.replace(' ', ''),
-                                            match2.current_score, match2.winner()))
-                                        for stat_link in stats_links():
-                                            if str(match2.team1).lower() in re.split("-|/", stat_link) or str(
-                                                    match2.team2).lower() in re.split("-|/", stat_link):
-                                                print(stats(stat_link))
-                                else:
-                                    pass
+                                time.sleep(60)
 
-                            time.sleep(60)
-
-    time.sleep(900)
+                time.sleep(900)
