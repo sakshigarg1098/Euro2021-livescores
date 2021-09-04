@@ -135,6 +135,11 @@ def stats(stats_link):
     return '#EURO2021 \n#{}vs{} \nPossession: \n{} \nShots on Target: \n{} \nTotal Passes: \n{}'.format(
         match2.team1.replace(' ', ''), match2.team2.replace(' ', ''), possession, shots_on_target, total_passes)
 
+# running an infinite while loop to set the timings for each match, every day automatically and posts:
+# the lineups before the match starts,
+# the statistics at HT,
+# the live scores, yellow cards, red cards and player name,
+# winner and final score
 
 while True:
 
