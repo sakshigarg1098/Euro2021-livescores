@@ -1,7 +1,7 @@
 from requests_html import HTMLSession
 import re
 
-
+# creating a class to get the desired data from the website
 class Football:
     
     # entering the site used for getting the scores and stats
