@@ -3,8 +3,9 @@ import re
 
 
 class Football:
-
-    def __init__(self, match_link):
+    
+    # entering the site used for getting the scores and stats
+    def __init__(self, match_link):  
         session = HTMLSession()
         self.res = session.get(match_link)
         self.match_codes = self.res.html.find('#__livescore', first=True)
@@ -25,8 +26,8 @@ class Football:
                  'Denmark': '\U0001F1E9\U0001F1F0', 'Czech Republic': '\U0001F1E8\U0001F1FF',
                  'Croatia': '\U0001F1ED\U0001F1F7',
                  'Belgium': '\U0001F1E7\U0001F1EA', 'Austria': '\U0001F1E6\U0001F1F9'}
-
-        if self.match_details[0].isdigit():
+        
+        if self.match_details[0].isdigit():  #printing the scores of the ongoing match (before and after HT)
             if self.match_details_lst[0].isdigit():
                 self.team1 = self.match_details_lst[1]
                 self.team2 = self.match_details_lst[3]
@@ -44,7 +45,7 @@ class Football:
                 self.res.html.render(timeout=30)
                 self.scheduled_time = self.res.html.find(".MatchDetailScore_status__16-uQ")[0].text
         else:
-            if self.match_details[:2] == 'FT' or self.match_details[:2] == 'HT':
+            if self.match_details[:2] == 'FT' or self.match_details[:2] == 'HT':  # posting whether it's HT or FT, or if the match has been cancelled, etc.
                 self.team1 = self.match_details_lst[0][2:]
                 self.team2 = self.match_details_lst[2]
                 self.current_score = '{}   {}   {}'.format(
